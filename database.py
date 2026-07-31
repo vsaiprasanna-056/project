@@ -19,4 +19,4 @@ SessionLocal = sessionmaker(
 )
 
 Base = declarative_base()
-mysql://avnadmin:AVNS_okX1RFsckRw31m5aeyz@mysqldb-saiprasannav999-dcd7.e.aivencloud.com:16816/defaultdb?ssl-mode=REQUIRED
+
