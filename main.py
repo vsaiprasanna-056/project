@@ -1,7 +1,10 @@
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
+from typing import List
 import crud, schemas
 from database import Base, engine, SessionLocal
+from fastapi import Response
+from auth import verify_customer
 
 Base.metadata.create_all(bind=engine)
 
@@ -23,7 +26,7 @@ def get_db():
 def create(products: schemas.productsCreate, db: Session = Depends(get_db)):
     return crud.create_products(db, products)
 
-@app.get("/products", response_model=list[schemas.productsResponse])
+@app.get("/products", response_model=List[schemas.productsResponse])
 def read_all(db: Session = Depends(get_db)):
     return crud.get_all_products(db)
 
@@ -54,3 +57,15 @@ def delete(products_id: int, db: Session = Depends(get_db)):
 @app.get("/cate/{cate}")
 def get_cate_prod(cate:str,db:Session=Depends(get_db)):
     return crud.get_prod_by_cate(db,cate)
+
+@app.post("/register")
+def customer_register(customer: schemas.CustomerCreate,
+                      db: Session = Depends(get_db)):
+    return crud.create_customer(customer, db)
+
+
+@app.post("/login")
+def customer_login(response: Response,
+                   customer: schemas.CustomerLogin,
+                   db: Session = Depends(get_db)):
+    return crud.login_customer(customer, db, response)
