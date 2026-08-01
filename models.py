@@ -6,7 +6,7 @@ class products(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     productname = Column(String(100), nullable=False)
-    price = Column(String(100), nullable=False)
+    price = Column(Integer, nullable=False)
     category= Column(String(50),nullable=False)
     colour=Column(String(70),nullable=True)
 
