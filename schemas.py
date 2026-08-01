@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 class productsCreate(BaseModel):
     productname: str
-    price:str 
+    price:int 
     category:str
     colour:str
 
