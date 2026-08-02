@@ -20,7 +20,6 @@ class CustomerCreate(BaseModel):
     password: str
     is_admin: bool = False
 
-
 class CustomerResponse(CustomerCreate):
     id: int
 
