@@ -61,22 +61,29 @@ def get_prod_by_cate(db:Session,cate:str):
     ).all()
 
     
+
+
 def create_customer(customer: schemas.CustomerCreate, db: Session):
-    new_customer = models.Customer(**customer.model_dump())
+    try:
+        new_customer = models.Customer(**customer.model_dump())
 
-    hashed = bcrypt.hashpw(
-        new_customer.password.encode(),
-        bcrypt.gensalt(rounds=12)
-    ).decode("utf-8")
+        hashed = bcrypt.hashpw(
+            new_customer.password.encode(),
+            bcrypt.gensalt(rounds=12)
+        ).decode("utf-8")
 
-    new_customer.password = hashed
+        new_customer.password = hashed
 
-    db.add(new_customer)
-    db.commit()
-    db.refresh(new_customer)
+        db.add(new_customer)
+        db.commit()
+        db.refresh(new_customer)
 
-    return new_customer
+        return new_customer
 
+    except Exception as e:
+        db.rollback()
+        print("ERROR:", e)
+        raise
 
 def login_customer(customer: schemas.CustomerLogin,
                    db: Session,
