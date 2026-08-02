@@ -6,6 +6,7 @@ from fastapi import Response
 
 from datetime import datetime, timedelta
 import jwt
+from sqlalchemy.exc import SQLAlchemyError
 
 SECRET_KEY = "abcdefghijklmnopqrstuvwxyz"
 ALGORITHM = "HS256"
