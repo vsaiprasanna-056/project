@@ -86,18 +86,10 @@ def login_customer(customer: schemas.CustomerLogin,
         models.Customer.email == customer.email
     ).first()
 
-    if not is_exists:
-        return {"message": "Customer not found"}
-
-    valid = bcrypt.checkpw(
-        customer.password.encode(),
-        is_exists.password.encode()
-    )
-
     if not valid:
-        return {"message": "Invalid password"}
+    return {"message": "Invalid password"}
 
-  payload = {
+payload = {
     "customer_name": is_exists.customer_name,
     "email": is_exists.email,
     "is_admin": is_exists.is_admin,
@@ -105,17 +97,22 @@ def login_customer(customer: schemas.CustomerLogin,
     "exp": datetime.utcnow() + timedelta(minutes=30)
 }
 
-    token = jwt.encode(
-        payload,
-        SECRET_KEY,
-        algorithm=ALGORITHM
-    )
+token = jwt.encode(
+    payload,
+    SECRET_KEY,
+    algorithm=ALGORITHM
+)
 
-    response.set_cookie(
-        key="access_token",
-        value=token,
-        httponly=True
-    )
+response.set_cookie(
+    key="access_token",
+    value=token,
+    httponly=True
+)
+
+return {
+    "message": "Login successful",
+    "access_token": token
+}
 
     return {
         "message": "Login successful",
