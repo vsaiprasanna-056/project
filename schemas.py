@@ -18,6 +18,7 @@ class CustomerCreate(BaseModel):
     phone: str
     address: str
     password: str
+    is_admin: bool = False
 
 
 class CustomerResponse(CustomerCreate):
