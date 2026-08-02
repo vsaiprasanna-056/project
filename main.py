@@ -22,12 +22,19 @@ def get_db():
 
 
 
-@app.post("/products", response_model=schemas.productsResponse)
-def create(products: schemas.productsCreate, db: Session = Depends(get_db)):
+@app.post("/products")
+def create(
+    products: schemas.productsCreate,
+    db: Session = Depends(get_db),
+    customer=Depends(verify_customer)
+):
     return crud.create_products(db, products)
 
 @app.get("/products", response_model=List[schemas.productsResponse])
-def read_all(db: Session = Depends(get_db)):
+def read_all(
+    db: Session = Depends(get_db),
+    customer=Depends(verify_customer)
+):
     return crud.get_all_products(db)
 
 @app.get("/products/{products_id}", response_model=schemas.productsResponse)
