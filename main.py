@@ -4,7 +4,8 @@ from typing import List
 import crud, schemas
 from database import Base, engine, SessionLocal
 from fastapi import Response
-from auth import verify_customer, verify_admin
+from auth import verify_customer
+from auth import verify_admin
 
 Base.metadata.create_all(bind=engine)
 
