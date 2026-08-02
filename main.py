@@ -44,13 +44,19 @@ def read_one(products_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="products not found")
     return products
 
-@app.put("/products/{products_id}")
+@app.put("/products/{products_id}", response_model=schemas.productsResponse)
 def update(
     products_id: int,
     products: schemas.productsCreate,
     db: Session = Depends(get_db),
     user=Depends(verify_admin)
 ):
+    updated = crud.update_products(db, products_id, products)
+
+    if not updated:
+        raise HTTPException(status_code=404, detail="products not found")
+
+    return updated
 
 @app.delete("/products/{products_id}")
 def delete(
@@ -58,8 +64,12 @@ def delete(
     db: Session = Depends(get_db),
     user=Depends(verify_admin)
 ):
+    deleted = crud.delete_products(db, products_id)
 
+    if not deleted:
+        raise HTTPException(status_code=404, detail="products not found")
 
+    return {"message": "products deleted successfully"}
 
 
 @app.get("/cate/{cate}")
