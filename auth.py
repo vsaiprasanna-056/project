@@ -5,7 +5,8 @@ SECRET_KEY = "abcdefghijklmnopqrstuvwxyz"
 ALGORITHM = "HS256"
 
 
-def verify_customer(request: Request):
+def verify_admin(request: Request):
+
     token = request.cookies.get("access_token")
 
     if not token:
@@ -15,11 +16,18 @@ def verify_customer(request: Request):
         )
 
     try:
+
         payload = jwt.decode(
             token,
             SECRET_KEY,
             algorithms=[ALGORITHM]
         )
+
+        if not payload.get("is_admin"):
+            raise HTTPException(
+                status_code=403,
+                detail="Admin access required"
+            )
 
         return payload
 
