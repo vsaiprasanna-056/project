@@ -97,13 +97,13 @@ def login_customer(customer: schemas.CustomerLogin,
     if not valid:
         return {"message": "Invalid password"}
 
-    payload = {
-        "customer_name": is_exists.customer_name,
-        "email": is_exists.email,
-        "is_admin": is_exist.is_admin,
-        "is_loggedin": True,
-        "exp": datetime.utcnow() + timedelta(minutes=30)
-    }
+  payload = {
+    "customer_name": is_exists.customer_name,
+    "email": is_exists.email,
+    "is_admin": is_exists.is_admin,
+    "is_loggedin": True,
+    "exp": datetime.utcnow() + timedelta(minutes=30)
+}
 
     token = jwt.encode(
         payload,
