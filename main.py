@@ -4,7 +4,7 @@ from typing import List
 import crud, schemas
 from database import Base, engine, SessionLocal
 from fastapi import Response
-from auth import verify_customer
+from auth import verify_customer, verify_admin
 
 Base.metadata.create_all(bind=engine)
 
@@ -22,14 +22,14 @@ def get_db():
 
 
 
-@app.post("/products")
+@app.post("/products", response_model=schemas.productsResponse)
 def create(
     products: schemas.productsCreate,
     db: Session = Depends(get_db),
-    customer=Depends(verify_customer)
+    user=Depends(verify_admin)
 ):
     return crud.create_products(db, products)
-
+    
 @app.get("/products", response_model=List[schemas.productsResponse])
 def read_all(
     db: Session = Depends(get_db),
@@ -44,19 +44,20 @@ def read_one(products_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="products not found")
     return products
 
-@app.put("/products/{products_id}", response_model=schemas.productsResponse)
-def update(products_id: int, products: schemas.productsCreate, db: Session = Depends(get_db)):
-    updated = crud.update_products(db, products_id, products)
-    if not updated:
-        raise HTTPException(status_code=404, detail="products not found")
-    return updated
+@app.put("/products/{products_id}")
+def update(
+    products_id: int,
+    products: schemas.productsCreate,
+    db: Session = Depends(get_db),
+    user=Depends(verify_admin)
+):
 
 @app.delete("/products/{products_id}")
-def delete(products_id: int, db: Session = Depends(get_db)):
-    deleted = crud.delete_products(db, products_id)
-    if not deleted:
-        raise HTTPException(status_code=404, detail="products not found")
-    return {"message":"products deleted successfully"}
+def delete(
+    products_id: int,
+    db: Session = Depends(get_db),
+    user=Depends(verify_admin)
+):
 
 
 
