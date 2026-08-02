@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, Boolean
 from database import Base
 
 class products(Base):
@@ -18,4 +18,5 @@ class Customer(Base):
     email = Column(String(100), unique=True, nullable=False)
     phone = Column(String(15), unique=True, nullable=False)
     address = Column(String(255), nullable=False)
-    password = Column(String(300), nullable=False)    
+    password = Column(String(300), nullable=False)
+    is_admin = Column(Boolean, default=False)
